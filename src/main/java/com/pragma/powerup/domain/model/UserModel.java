@@ -1,6 +1,8 @@
 package com.pragma.powerup.domain.model;
 import java.time.LocalDate;
 
+import static com.pragma.powerup.domain.utils.Constant.*;
+
 public class UserModel {
 
     private Long id;
@@ -97,7 +99,15 @@ public class UserModel {
     }
 
     public boolean isEmail(){
-        return this.email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
+        return this.email.matches(EMAIL_REGEX_PATTERN);
+    }
+
+    public boolean isPhone(){
+        return this.phone.matches(PHONE_REGEX_PATTERN);
+    }
+
+    public boolean isDni(){
+        return this.dni.matches(DNI_REGEX_PATTERN);
     }
 
 }

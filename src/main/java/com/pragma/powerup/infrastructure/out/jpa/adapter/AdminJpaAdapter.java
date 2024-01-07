@@ -5,8 +5,6 @@ import com.pragma.powerup.domain.spi.IAdminPersistencePort;
 import com.pragma.powerup.infrastructure.out.jpa.entity.UserEntity;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IUserEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IUserRepository;
-import com.pragma.powerup.infrastructure.security.auth.AuthenticationService;
-import com.pragma.powerup.infrastructure.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -37,5 +35,11 @@ public class AdminJpaAdapter implements IAdminPersistencePort {
         else {
         return null;
         }
+    }
+
+    @Override
+    public UserModel findUserByEmail(String email) {
+        Optional<UserEntity> userEmail = userRepository.findByEmail(email);
+        return userEmail.map(userEntityMapper::toUserModel).orElse(null);
     }
 }

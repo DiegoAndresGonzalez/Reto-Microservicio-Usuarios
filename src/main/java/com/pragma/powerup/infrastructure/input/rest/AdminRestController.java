@@ -3,7 +3,6 @@ package com.pragma.powerup.infrastructure.input.rest;
 import com.pragma.powerup.application.dto.request.UserRequestDto;
 import com.pragma.powerup.application.dto.response.UserResponseDto;
 import com.pragma.powerup.application.handler.IAdminHandler;
-import com.pragma.powerup.infrastructure.out.jpa.entity.UserEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,7 +29,7 @@ public class AdminRestController {
         adminHandler.createOwner(userRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-    @GetMapping("owner/{id}")
+    @GetMapping("user/{id}")
     public ResponseEntity<UserResponseDto> findUserById(@PathVariable Long id){
         return ResponseEntity.ok(adminHandler.findOwnerById(id));
     }

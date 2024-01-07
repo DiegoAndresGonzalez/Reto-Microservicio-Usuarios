@@ -1,6 +1,8 @@
 package com.pragma.powerup.infrastructure.exceptionhandler;
 
-import com.pragma.powerup.domain.exception.DomainException;
+import com.pragma.powerup.domain.exception.DataNotFoundException;
+import com.pragma.powerup.domain.exception.InvalidInputException;
+import com.pragma.powerup.domain.exception.DuplicateEmailException;
 import com.pragma.powerup.infrastructure.exception.NoDataFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +24,31 @@ public class ControllerAdvisor {
                 .body(Collections.singletonMap(MESSAGE, ExceptionResponse.NO_DATA_FOUND.getMessage()));
     }
 
-    @ExceptionHandler(DomainException.class)
-    public ResponseEntity<Map<String,String>> handleDomainException(
-            DomainException domainException){
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<Map<String,String>> handleInputException(
+            InvalidInputException invalidInputException){
         Map<String,String> exResponse = new HashMap<>();
-        exResponse.put(MESSAGE,domainException.getMessage());
+        exResponse.put(MESSAGE, invalidInputException.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(exResponse);
     }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<Map<String,String>> handleEmailFoundEx(
+            DuplicateEmailException foundEx){
+        Map<String,String> exResponse = new HashMap<>();
+        exResponse.put(MESSAGE,foundEx.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(exResponse);
+    }
+
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleDataNotFoundEx(
+            DataNotFoundException notFoundEx){
+        Map<String,String> exResponse = new HashMap<>();
+        exResponse.put(MESSAGE,notFoundEx.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(exResponse);
+    }
+
 }
