@@ -6,5 +6,6 @@ public interface IAdminPersistencePort {
 
     UserModel createOwner(UserModel userModel);
     UserModel findOwnerById(Long ownerId);
+    UserModel findUserByEmail(String email);
 
 }
