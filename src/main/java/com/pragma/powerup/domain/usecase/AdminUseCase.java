@@ -9,18 +9,16 @@ import com.pragma.powerup.domain.model.RoleModel;
 import com.pragma.powerup.domain.spi.IAdminPersistencePort;
 import com.pragma.powerup.domain.spi.IRolePersistencePort;
 import com.pragma.powerup.domain.utils.Constant;
+import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 
-public class UserUseCase implements IAdminServicePort {
+@AllArgsConstructor
+public class AdminUseCase implements IAdminServicePort {
 
     private final IAdminPersistencePort administratorPersistencePort;
     private final IRolePersistencePort rolePersistencePort;
 
-    public UserUseCase(IAdminPersistencePort administratorPersistencePort, IRolePersistencePort rolePersistencePort) {
-        this.administratorPersistencePort = administratorPersistencePort;
-        this.rolePersistencePort = rolePersistencePort;
-    }
 
     @Override
     public void createOwner(UserModel userModel) {
