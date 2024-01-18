@@ -11,6 +11,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.pragma.powerup.domain.utils.Constant.ADMIN_ROLE;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -25,8 +27,8 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .antMatchers("/api/admin/**","/auth/**")
-                .permitAll()
+                .antMatchers("/api/admin/**").hasRole(ADMIN_ROLE)
+                .antMatchers("/auth/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -35,7 +37,6 @@ public class SecurityConfiguration {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         return httpSecurity.build();
     }
 }

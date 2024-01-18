@@ -7,5 +7,6 @@ public interface IAdminHandler {
 
     void createOwner(UserRequestDto userRequestDto);
     UserResponseDto findOwnerById(Long ownerId);
+    UserResponseDto findUserByEmail(String email);
 
 }

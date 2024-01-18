@@ -14,10 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import static com.pragma.powerup.domain.utils.Constant.SECRET_KEY;
+
 @Service
 public class JwtService {
-
-    private static final String SECRET_KEY = "bLbjRGox3VMtwGXzsFh51hL4AADgiqjMTxbzId3RSWJd9aU3KFC8flGRrrNIprvz";
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);

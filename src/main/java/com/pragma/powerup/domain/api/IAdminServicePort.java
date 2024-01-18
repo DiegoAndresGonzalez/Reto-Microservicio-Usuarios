@@ -6,5 +6,5 @@ public interface IAdminServicePort {
 
     void createOwner(UserModel userModel);
     UserModel findOwnerById(Long ownerId);
-
+    UserModel findUserByEmail(String email);
 }
