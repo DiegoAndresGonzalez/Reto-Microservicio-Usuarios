@@ -31,7 +31,7 @@ public class UserUseCase implements IAdminServicePort {
         validatePhone(userModel);
         validateBirthdate(userModel);
         validatePassword(userModel);
-        RoleModel roleModel = rolePersistencePort.findRoleByName(Constant.PROPRIETARY_ROLE);
+        RoleModel roleModel = rolePersistencePort.findRoleByName(Constant.OWNER_ROLE);
         if (roleModel == null) {
             throw new DataNotFoundException("El rol no existe.");
         }
@@ -97,5 +97,10 @@ public class UserUseCase implements IAdminServicePort {
     @Override
     public UserModel findOwnerById(Long ownerId) {
         return administratorPersistencePort.findOwnerById(ownerId);
+    }
+
+    @Override
+    public UserModel findUserByEmail(String email) {
+        return administratorPersistencePort.findUserByEmail(email);
     }
 }

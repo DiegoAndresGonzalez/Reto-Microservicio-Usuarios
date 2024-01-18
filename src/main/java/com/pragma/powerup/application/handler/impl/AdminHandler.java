@@ -8,6 +8,7 @@ import com.pragma.powerup.application.mapper.IAdminResponseMapper;
 import com.pragma.powerup.domain.api.IAdminServicePort;
 import com.pragma.powerup.domain.model.UserModel;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,12 @@ public class AdminHandler implements IAdminHandler {
     @Override
     public UserResponseDto findOwnerById(Long ownerId) {
         UserModel userModel = adminServicePort.findOwnerById(ownerId);
+        return adminResponseMapper.toResponse(userModel);
+    }
+
+    @Override
+    public UserResponseDto findUserByEmail(String email) {
+        UserModel userModel = adminServicePort.findUserByEmail(email);
         return adminResponseMapper.toResponse(userModel);
     }
 }

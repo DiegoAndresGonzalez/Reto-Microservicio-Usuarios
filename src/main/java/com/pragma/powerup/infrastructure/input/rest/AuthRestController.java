@@ -5,10 +5,7 @@ import com.pragma.powerup.application.dto.response.AuthResponse;
 import com.pragma.powerup.infrastructure.security.auth.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +16,8 @@ public class AuthRestController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-        return ResponseEntity.ok(authService.authentication(request));
+        AuthResponse authResponse = authService.authentication(request);
+        return ResponseEntity.ok(authResponse);
     }
 
 }
