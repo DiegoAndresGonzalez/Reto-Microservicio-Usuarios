@@ -1,24 +1,26 @@
 package com.pragma.powerup.domain.usecase;
 
-import com.pragma.powerup.domain.api.IAdminServicePort;
+import com.pragma.powerup.domain.api.IUserServicePort;
 import com.pragma.powerup.domain.exception.DataNotFoundException;
 import com.pragma.powerup.domain.exception.InvalidInputException;
 import com.pragma.powerup.domain.exception.DuplicateEmailException;
 import com.pragma.powerup.domain.model.UserModel;
 import com.pragma.powerup.domain.model.RoleModel;
-import com.pragma.powerup.domain.spi.IAdminPersistencePort;
+import com.pragma.powerup.domain.spi.IUserPersistencePort;
 import com.pragma.powerup.domain.spi.IRolePersistencePort;
 import com.pragma.powerup.domain.utils.Constant;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
 
+import static com.pragma.powerup.domain.utils.Constant.CLIENT_ROLE;
+import static com.pragma.powerup.domain.utils.Constant.EMPLOYEE_ROLE;
+
 @AllArgsConstructor
-public class AdminUseCase implements IAdminServicePort {
+public class UserUseCase implements IUserServicePort {
 
-    private final IAdminPersistencePort administratorPersistencePort;
+    private final IUserPersistencePort userPersistencePort;
     private final IRolePersistencePort rolePersistencePort;
-
 
     @Override
     public void createOwner(UserModel userModel) {
@@ -30,22 +32,19 @@ public class AdminUseCase implements IAdminServicePort {
         validateBirthdate(userModel);
         validatePassword(userModel);
         RoleModel roleModel = rolePersistencePort.findRoleByName(Constant.OWNER_ROLE);
-        if (roleModel == null) {
-            throw new DataNotFoundException("El rol no existe.");
-        }
-        userModel.setRole(roleModel);
-        administratorPersistencePort.createOwner(userModel);
+        validateRoleExistence(userModel,roleModel);
+        userPersistencePort.createUser(userModel);
     }
 
     private void validateFirstName(UserModel userModel) {
         if (userModel.getFirstName() == null || userModel.getFirstName().trim().isEmpty()) {
-            throw new InvalidInputException("El nombre del propietario no puede estar vacío.");
+            throw new InvalidInputException("El nombre del usuario no puede estar vacío..");
         }
     }
 
     private void validateLastName(UserModel userModel){
         if (userModel.getLastName() == null || userModel.getLastName().trim().isEmpty()) {
-            throw new InvalidInputException("El apellido del propietario no puede estar vacío.");
+            throw new InvalidInputException("El apellido del usuario no puede estar vacío.");
         }
     }
 
@@ -54,7 +53,7 @@ public class AdminUseCase implements IAdminServicePort {
             throw new InvalidInputException("El correo no puede estar vacío.");
         }
 
-        UserModel emailModel = administratorPersistencePort.findUserByEmail(userModel.getEmail());
+        UserModel emailModel = userPersistencePort.findUserByEmail(userModel.getEmail());
         if (emailModel != null) {
             throw new DuplicateEmailException("Este correo ya está registrado.");
         } else if (!userModel.isEmail()) {
@@ -93,12 +92,69 @@ public class AdminUseCase implements IAdminServicePort {
     }
 
     @Override
+    public void createEmployee(UserModel userModel) {
+        validateRequiredFields(userModel);
+        RoleModel roleModel = rolePersistencePort.findRoleById(userModel.getRole().getId());
+        validateRoleExistence(userModel,roleModel);
+        validateEmail(userModel);
+        validatePhone(userModel);
+        validateDni(userModel);
+        validateEmployeeRole(userModel.getRole());
+        userModel.setRole(roleModel);
+        userPersistencePort.createUser(userModel);
+    }
+
+    @Override
+    public void createClient(UserModel userModel) {
+        validateRequiredFields(userModel);
+        RoleModel roleModel = rolePersistencePort.findRoleById(userModel.getRole().getId());
+        validateRoleExistence(userModel,roleModel);
+        validateEmail(userModel);
+        validatePhone(userModel);
+        validateDni(userModel);
+        validateClientRole(userModel);
+        userModel.setRole(roleModel);
+        userPersistencePort.createUser(userModel);
+    }
+
+    private void validateRequiredFields(UserModel userModel) {
+        if (userModel.getFirstName() == null || userModel.getFirstName().trim().isEmpty() ||
+                userModel.getLastName() == null || userModel.getLastName().trim().isEmpty() ||
+                userModel.getDni() == null || userModel.getDni().trim().isEmpty() ||
+                userModel.getPhone() == null || userModel.getPhone().trim().isEmpty() ||
+                userModel.getEmail() == null || userModel.getEmail().trim().isEmpty() ||
+                userModel.getRole().getId() == null ||
+                userModel.getPassword() == null || userModel.getPassword().trim().isEmpty()) {
+            throw new InvalidInputException("Todos los campos son obligatorios al crear una cuenta.");
+        }
+    }
+
+    private void validateEmployeeRole(RoleModel roleModel) {
+        if (!roleModel.getRole().equals(EMPLOYEE_ROLE)) {
+            throw new InvalidInputException("El usuario debe tener el rol 'empleado'.");
+        }
+    }
+
+    private void validateClientRole(UserModel userModel) {
+        if (!userModel.getRole().getRole().equals(CLIENT_ROLE)) {
+            throw new InvalidInputException("El usuario debe tener el rol 'cliente'.");
+        }
+    }
+
+    private void validateRoleExistence(UserModel userModel, RoleModel roleModel) {
+        if (roleModel == null) {
+            throw new DataNotFoundException("El rol no existe.");
+        }
+        userModel.setRole(roleModel);
+    }
+
+    @Override
     public UserModel findOwnerById(Long ownerId) {
-        return administratorPersistencePort.findOwnerById(ownerId);
+        return userPersistencePort.findOwnerById(ownerId);
     }
 
     @Override
     public UserModel findUserByEmail(String email) {
-        return administratorPersistencePort.findUserByEmail(email);
+        return userPersistencePort.findUserByEmail(email);
     }
 }

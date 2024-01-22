@@ -1,7 +1,7 @@
 package com.pragma.powerup.infrastructure.out.jpa.adapter;
 
 import com.pragma.powerup.domain.model.UserModel;
-import com.pragma.powerup.domain.spi.IAdminPersistencePort;
+import com.pragma.powerup.domain.spi.IUserPersistencePort;
 import com.pragma.powerup.infrastructure.out.jpa.entity.UserEntity;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IUserEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IUserRepository;
@@ -11,14 +11,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class AdminJpaAdapter implements IAdminPersistencePort {
+public class UserJpaAdapter implements IUserPersistencePort {
 
     private final IUserRepository userRepository;
     private final IUserEntityMapper userEntityMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserModel createOwner(UserModel userModel) {
+    public UserModel createUser(UserModel userModel) {
         UserEntity userEntity = userEntityMapper.toUserEntity(userModel);
         userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userRepository.save(userEntity);
@@ -42,4 +42,5 @@ public class AdminJpaAdapter implements IAdminPersistencePort {
         Optional<UserEntity> userEmail = userRepository.findByEmail(email);
         return userEmail.map(userEntityMapper::toUserModel).orElse(null);
     }
+
 }
