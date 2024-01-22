@@ -8,6 +8,8 @@ import com.pragma.powerup.infrastructure.out.jpa.repository.IRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class RoleJpaAdapter implements IRolePersistencePort {
@@ -19,6 +21,12 @@ public class RoleJpaAdapter implements IRolePersistencePort {
     public RoleModel findRoleByName(String roleName) {
         RoleEntity roleEntity = roleRepository.findByRole(roleName);
         return roleEntityMapper.toRoleModel(roleEntity);
+    }
+
+    @Override
+    public RoleModel findRoleById(Long roleId) {
+        Optional<RoleEntity> foundRole = roleRepository.findById(roleId);
+        return foundRole.map(roleEntityMapper::toRoleModel).orElse(null);
     }
 
 }

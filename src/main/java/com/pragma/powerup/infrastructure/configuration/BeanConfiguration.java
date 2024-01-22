@@ -1,14 +1,10 @@
 package com.pragma.powerup.infrastructure.configuration;
 
-import com.pragma.powerup.domain.api.IAdminServicePort;
-import com.pragma.powerup.domain.api.IOwnerServicePort;
-import com.pragma.powerup.domain.spi.IAdminPersistencePort;
-import com.pragma.powerup.domain.spi.IOwnerPersistencePort;
+import com.pragma.powerup.domain.api.IUserServicePort;
+import com.pragma.powerup.domain.spi.IUserPersistencePort;
 import com.pragma.powerup.domain.spi.IRolePersistencePort;
-import com.pragma.powerup.domain.usecase.AdminUseCase;
-import com.pragma.powerup.domain.usecase.OwnerUseCase;
-import com.pragma.powerup.infrastructure.out.jpa.adapter.AdminJpaAdapter;
-import com.pragma.powerup.infrastructure.out.jpa.adapter.OwnerJpaAdapter;
+import com.pragma.powerup.domain.usecase.UserUseCase;
+import com.pragma.powerup.infrastructure.out.jpa.adapter.UserJpaAdapter;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IUserEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,25 +28,14 @@ public class BeanConfiguration {
     private final IRolePersistencePort rolePersistencePort;
 
     @Bean
-    public IAdminPersistencePort adminPersistencePort(PasswordEncoder passwordEncoder){
-        return new AdminJpaAdapter(userRepository, userEntityMapper, passwordEncoder);
+    public IUserPersistencePort adminPersistencePort(PasswordEncoder passwordEncoder){
+        return new UserJpaAdapter(userRepository, userEntityMapper, passwordEncoder);
     }
 
     @Bean
-    public IAdminServicePort adminServicePort(IAdminPersistencePort adminPersistencePort,
-                                              IRolePersistencePort rolePersistencePort){
-        return new AdminUseCase(adminPersistencePort, rolePersistencePort);
-    }
-
-    @Bean
-    public IOwnerPersistencePort ownerPersistencePort(PasswordEncoder passwordEncoder){
-        return new OwnerJpaAdapter(userRepository, userEntityMapper, passwordEncoder);
-    }
-
-    @Bean
-    public IOwnerServicePort ownerServicePort(IOwnerPersistencePort ownerPersistencePort,
-                                              IRolePersistencePort rolePersistencePort){
-        return new OwnerUseCase(ownerPersistencePort,rolePersistencePort);
+    public IUserServicePort adminServicePort(IUserPersistencePort adminPersistencePort,
+                                             IRolePersistencePort rolePersistencePort){
+        return new UserUseCase(adminPersistencePort, rolePersistencePort);
     }
 
     @Bean

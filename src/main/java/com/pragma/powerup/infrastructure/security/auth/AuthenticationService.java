@@ -25,7 +25,7 @@ public class AuthenticationService {
         );
         UserEntity authUser = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
-        String role = String.valueOf(userRepository.findRoleByEmail(request.getEmail()));
+        String role = String.valueOf(userRepository.findRoleByEmail(request.getEmail()).getRole().getRole());
         String jwtToken = jwtService.generateTokenWithRole(authUser, role);
         return AuthResponse.builder()
                 .token(jwtToken)

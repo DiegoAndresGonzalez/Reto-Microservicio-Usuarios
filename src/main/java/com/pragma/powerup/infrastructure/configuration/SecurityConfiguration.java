@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,6 +18,7 @@ import static com.pragma.powerup.domain.utils.Constant.OWNER_ROLE;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
 
    private final JwtAuthenticationFilter jwtAuthFilter;
@@ -28,8 +30,8 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .antMatchers("/api/admin/**").hasRole(ADMIN_ROLE)
-                .antMatchers("api/owner/**").hasRole(OWNER_ROLE)
+                .antMatchers("/api/user/client").permitAll()
+                .antMatchers("/api/user/**").hasAnyRole(OWNER_ROLE, ADMIN_ROLE)
                 .antMatchers("/auth/**").permitAll()
                 .anyRequest()
                 .authenticated()

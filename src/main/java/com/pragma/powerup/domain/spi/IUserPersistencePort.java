@@ -2,9 +2,9 @@ package com.pragma.powerup.domain.spi;
 
 import com.pragma.powerup.domain.model.UserModel;
 
-public interface IAdminPersistencePort {
+public interface IUserPersistencePort {
 
-    UserModel createOwner(UserModel userModel);
+    UserModel createUser(UserModel userModel);
     UserModel findOwnerById(Long ownerId);
     UserModel findUserByEmail(String email);
 
