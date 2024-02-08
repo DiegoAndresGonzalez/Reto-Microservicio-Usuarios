@@ -4,7 +4,6 @@ import com.pragma.powerup.domain.model.RoleModel;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 public class EmployeeRequestDto {
@@ -13,8 +12,9 @@ public class EmployeeRequestDto {
     private String lastName;
     private String dni;
     private String phone;
-    private RoleModel roleModel;
+    private RoleModel role;
     private String email;
     private String password;
+    private String restaurantName;
 
 }

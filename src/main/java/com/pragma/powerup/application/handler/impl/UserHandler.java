@@ -49,6 +49,6 @@ public class UserHandler implements IUserHandler {
     @Override
     public void createEmployee(EmployeeRequestDto employeeRequestDto) {
         UserModel userModel = userRequestMapper.toEmployeeModel(employeeRequestDto);
-        userServicePort.createEmployee(userModel);
-    }
+        userServicePort.createEmployee(userModel, employeeRequestDto.getRestaurantName());
+        }
 }

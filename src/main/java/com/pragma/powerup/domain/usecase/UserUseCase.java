@@ -92,7 +92,7 @@ public class UserUseCase implements IUserServicePort {
     }
 
     @Override
-    public void createEmployee(UserModel userModel) {
+    public void createEmployee(UserModel userModel, String restaurantName) {
         validateRequiredFields(userModel);
         RoleModel roleModel = rolePersistencePort.findRoleById(userModel.getRole().getId());
         validateRoleExistence(userModel,roleModel);
@@ -101,7 +101,9 @@ public class UserUseCase implements IUserServicePort {
         validateDni(userModel);
         validateEmployeeRole(userModel.getRole());
         userModel.setRole(roleModel);
-        userPersistencePort.createUser(userModel);
+        UserModel newUser = userPersistencePort.createUser(userModel);
+        userPersistencePort.saveUserEmployeeRestaurant(newUser,restaurantName);
+
     }
 
     @Override
