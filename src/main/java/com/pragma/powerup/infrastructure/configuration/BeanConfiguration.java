@@ -4,6 +4,7 @@ import com.pragma.powerup.domain.api.IUserServicePort;
 import com.pragma.powerup.domain.spi.IUserPersistencePort;
 import com.pragma.powerup.domain.spi.IRolePersistencePort;
 import com.pragma.powerup.domain.usecase.UserUseCase;
+import com.pragma.powerup.infrastructure.feignclient.IRestaurantFeignClient;
 import com.pragma.powerup.infrastructure.out.jpa.adapter.UserJpaAdapter;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IUserEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IUserRepository;
@@ -28,8 +29,8 @@ public class BeanConfiguration {
     private final IRolePersistencePort rolePersistencePort;
 
     @Bean
-    public IUserPersistencePort adminPersistencePort(PasswordEncoder passwordEncoder){
-        return new UserJpaAdapter(userRepository, userEntityMapper, passwordEncoder);
+    public IUserPersistencePort adminPersistencePort(PasswordEncoder passwordEncoder, IRestaurantFeignClient restaurantFeignClient){
+        return new UserJpaAdapter(userRepository, userEntityMapper, passwordEncoder,restaurantFeignClient);
     }
 
     @Bean

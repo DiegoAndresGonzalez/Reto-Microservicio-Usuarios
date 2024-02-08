@@ -4,6 +4,7 @@ import com.pragma.powerup.application.dto.request.ClientRequestDto;
 import com.pragma.powerup.application.dto.request.EmployeeRequestDto;
 import com.pragma.powerup.application.dto.request.UserRequestDto;
 import com.pragma.powerup.application.dto.response.UserResponseDto;
+import org.springframework.data.domain.Page;
 
 public interface IUserHandler {
 

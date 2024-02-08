@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import static com.pragma.powerup.domain.utils.Constant.*;
@@ -36,13 +38,13 @@ public class UserRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @GetMapping("{id}")
-    @PreAuthorize("hasAnyRole('"+ADMIN_ROLE+"','"+OWNER_ROLE+"')")
+    @PreAuthorize("hasAnyRole('"+ADMIN_ROLE+"')")
     public ResponseEntity<UserResponseDto> findUserById(@PathVariable Long id){
         return ResponseEntity.ok(userHandler.findOwnerById(id));
     }
 
     @GetMapping("byEmail/{email}")
-    @PreAuthorize("hasAnyRole('"+ADMIN_ROLE+"','"+OWNER_ROLE+"')")
+    @PreAuthorize("hasAnyRole('"+ADMIN_ROLE+"')")
     public ResponseEntity<UserResponseDto> findUserByEmail(@PathVariable String email){
         return ResponseEntity.ok(userHandler.findUserByEmail(email));
     }
@@ -58,6 +60,14 @@ public class UserRestController {
     public ResponseEntity<Void> createClient(@RequestBody ClientRequestDto clientRequestDto){
         userHandler.createClient(clientRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("data")
+    @PreAuthorize("hasAnyRole('"+ADMIN_ROLE+"','"+OWNER_ROLE+"','"+CLIENT_ROLE+"','"+EMPLOYEE_ROLE+"')")
+    public ResponseEntity<UserResponseDto> findLoggedUser(Authentication authentication){
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserResponseDto userResponseDto = userHandler.findUserByEmail(userDetails.getUsername());
+        return  ResponseEntity.ok(userResponseDto);
     }
 
 }
